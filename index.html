@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .card {
+            width: 100%;
+            height: 100vh;
+            text-align: center;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+        }
+
+        .title {
+            font-size: 40px;
+            height: 180px;
+        }
+
+        .img {
+            width: 200px;
+            height: 200px;
+        }
+
+        .price,
+        .rating {
+            font-size: 35px;
+        }
+
+        .description{
+            font-size: 30px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 6;
+            -webkit-box-orient: vertical;
+        }
+
+        .pr-rat {
+            width: 500px;
+            margin: 20px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .cards {
+            border: 1px solid black;
+            border-radius: 20px;
+            width: 550px;
+            height: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px;
+            padding: 20px;
+            position: relative;
+        }
+        .icon{
+            width: 70px;
+            height: 70px;
+            position: absolute;
+            top: -30px;
+            right: -30px;
+        }
+
+
+        /* .colors{
+        display: flex
+    }
+    .color-space{
+        width: 500px;
+        height: 500px;
+        background-image: url()
+    } */
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <!-- <b class="title"></b>
+        <span class="price"></span>
+        <span class="description"></span>
+        <span class="category"></span>
+        <span class="rating"></span> -->
+        
+    </div>
+
+
+
+    <script>
+        // let title = document.querySelector(".title");
+        // let price = document.querySelector(".price");
+        // let description = document.querySelector(".description");
+        // let category = document.querySelector(".category");
+        // let image = document.querySelector(".image");
+        // let rating = document.querySelector(".rating");
+
+
+        let card = [];
+        getCard()
+        function getCard() {
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    JSON.parse(xhr.response).forEach(element => {
+                        card.push(element);
+                    });
+                    makeCardBlocks()
+                }
+            };
+
+            xhr.open("GET", "https://fakestoreapi.com/products");
+            xhr.send();
+        }
+
+        function makeCardBlocks() {
+            let elCard = document.querySelector(".card");
+            card.forEach(element => {
+                elCard.innerHTML += `
+                <div class="cards">
+                    <img class="icon" src="./2920658.png" alt="">
+                    <h1 class="title"> ${element.title}</h1>
+                    <img class="img" src="${element.image}" alt="">
+                    <div class="pr-rat">
+                        <b class="price"> Price: $ ${element.price}</b>
+                        <b class="rating"> Rate: ${element.rating.rate}, <br>
+                        Count: ${element.rating.count}</b>
+                    </div>
+                    <div class="description">${element.description}</div>
+                </div>
+                `
+            })
+        }
+
+
+
+    </script>
+
+</body>
+
+</html>
