@@ -17,22 +17,22 @@
         }
 
         .title {
-            font-size: 40px;
+            font-size: 30px;
             height: 180px;
         }
 
         .img {
-            width: 200px;
-            height: 200px;
+            width: 150px;
+            height: 150px;
         }
 
         .price,
         .rating {
-            font-size: 35px;
+            font-size: 20px;
         }
 
-        .description{
-            font-size: 30px;
+        .description {
+            font-size: 15px;
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
@@ -50,8 +50,8 @@
         .cards {
             border: 1px solid black;
             border-radius: 20px;
-            width: 550px;
-            height: 800px;
+            width: 350px;
+            height: 600px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -59,48 +59,92 @@
             padding: 20px;
             position: relative;
         }
-        .icon{
-            width: 70px;
-            height: 70px;
+
+        .icon {
+            border-radius: 50%;
+            width: 65px;
+            height: 63px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             position: absolute;
             top: -30px;
             right: -30px;
         }
 
+        .icon-img {
+            width: 65px;
+            height: 65px;
+            margin: -10px;
+            display: flex;
+            justify-content: center;
+        }
 
-        /* .colors{
-        display: flex
-    }
-    .color-space{
-        width: 500px;
-        height: 500px;
-        background-image: url()
-    } */
+        .icon-plus {
+            border-radius: 50%;
+            width: 66px;
+            height: 66px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .fon-add {
+            width: 100%;
+            height: 100vh;
+            display: none;
+            /* position: fixed; */
+            background-color: rgba(250, 250, 250, 0.5);
+        }
+
+        .add {
+            width: 300px;
+            height: 250px;
+            display: none;
+            margin: auto;
+            border: 1px solid black;
+            padding: 30px;
+            box-sizing: border-box;
+            background-color: white;
+        }
+
+        .but {
+            border-radius: 50%;
+            width: 72px;
+            height: 72px;
+            display: flex;
+            justify-content: center;
+        }
     </style>
 </head>
 
 <body>
-    <div class="card">
-        <!-- <b class="title"></b>
-        <span class="price"></span>
-        <span class="description"></span>
-        <span class="category"></span>
-        <span class="rating"></span> -->
-        
+
+    <button onclick="addCard()" class="but"><img src="./1.png" class="icon-plus"></button>
+
+
+    <div class="fon-add">
+        <div class="add">
+            <div style="height: 150px; display: flex; flex-direction: column; justify-content: space-around;">
+                <b style="font-size: 20px; text-align: center;">New card</b>
+                <input class="name-card" type="text" placeholder="Name" name="" id="">
+                <input class="img-card" type="text" placeholder="URL-address image" name="" id="">
+                <input class="price-card" type="text" placeholder="Price" name="" id="">
+                <input class="desc-card" type="text" placeholder="Description" name="" id="">
+            </div>
+            <p style="text-align: center;">
+                <button onclick="addOne()">Add</button>
+                <button onclick="cancelCard()">Cancel</button>
+            </p>
+        </div>
     </div>
 
-
+    <div class="card">
+    </div>
 
     <script>
-        // let title = document.querySelector(".title");
-        // let price = document.querySelector(".price");
-        // let description = document.querySelector(".description");
-        // let category = document.querySelector(".category");
-        // let image = document.querySelector(".image");
-        // let rating = document.querySelector(".rating");
-
 
         let card = [];
+
         getCard()
         function getCard() {
             let xhr = new XMLHttpRequest();
@@ -113,16 +157,20 @@
                 }
             };
 
-            xhr.open("GET", "https://fakestoreapi.com/products");
+            xhr.open("GET", "https://fakestoreapi.com/products", false);
             xhr.send();
+
+            localStorage.setItem("products", JSON.stringify(card));
         }
+
 
         function makeCardBlocks() {
             let elCard = document.querySelector(".card");
-            card.forEach(element => {
+            let products = JSON.parse(localStorage.getItem("products"));
+            products.forEach(element => {
                 elCard.innerHTML += `
                 <div class="cards">
-                    <img class="icon" src="./2920658.png" alt="">
+                    <button class="icon"> <img class="icon-img" src="./2920658.png" alt=""> </button>
                     <h1 class="title"> ${element.title}</h1>
                     <img class="img" src="${element.image}" alt="">
                     <div class="pr-rat">
@@ -136,7 +184,20 @@
             })
         }
 
+        let div1 = document.querySelector('.fon-add');
+        let div2 = document.querySelector('.add');
+        let body = document.querySelector('body');
 
+        function addCard() {
+            div1.style.display = 'block';
+            div2.style.display = 'block';
+            div1.style.backgroundColor = "rgb(196, 193, 193, 0.5)";
+        }
+
+        function cancelCard() {
+            div1.style.display = 'none';
+            body.style.backgroundColor = 'white';
+        }
 
     </script>
 

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            font-size: 20px;
+            background-color: black;
+        }
+
+        .delete {
+            width: 30px;
+            height: 30px;
+            margin-left: 275px;
+            cursor: pointer;
+        }
+
+        .cards {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            height: 100vh;
+            margin: 0 auto;
+
+        }
+
+        .img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .card {
+            width: 300px;
+            height: 350px;
+            border: 3px solid white;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: white;
+            padding: 5px 10px;
+            margin: 15px;
+        }
+
+        .description {
+            font-size: 15px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            text-align: justify;
+        }
+
+        .title {
+            height: 90px;
+            font-size: 20px;
+            margin: 0;
+        }
+
+        .price {
+            margin-top: 10px;
+            font-weight: bolder;
+        }
+
+        .modalWin {
+            width: 250px;
+            height: 265px;
+            text-align: center;
+
+            background-color: rgb(233, 233, 233);
+            margin: 50px auto;
+            padding-top: 15px;
+            border-radius: 15px;
+            border: 1px solid grey;
+        }
+
+        .block {
+            width: 100%;
+            height: 100vh;
+            background-color: rgb(190, 190, 190, 0.5);
+            display: none;
+            position: fixed;
+            margin-top: -25px;
+        }
+
+        input {
+            margin-bottom: 15px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <button onclick="addNewCard()" class="btnAdd">Add</button>
+    <div class="block">
+        <div class="modalWin">
+            <p>New card</p>
+            <input class="newTitle" type="text" placeholder="Title" name="" id="">
+            <input class="newImage" type="text" placeholder="Image" name="" id="">
+            <input class="newPrice" type="text" placeholder="Price" name="" id="">
+            <input class="newDescription" type="text" placeholder="Description" name="" id=""><br>
+            <button onclick="addCard()">Add</button>
+            <button onclick="cancelCard()">Cancel</button>
+        </div>
+    </div>
+    <div class="cards"></div>
+    <button></button>
+    <script>
+
+        if (localStorage.getItem("cards") == null || localStorage.getItem("cards").length === 2) {
+            getData()
+        } else {
+            makeCardBlocks()
+        }
+
+
+
+
+        function getData() {
+            let xhr = new XMLHttpRequest();
+            let doc = [];
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    JSON.parse(xhr.response).forEach(element => {
+                        doc.push(element);
+
+                    });
+                    makeCardBlocks()
+                }
+            }
+            xhr.open("GET", "https://fakestoreapi.com/products", false);
+            xhr.send();
+
+            localStorage.setItem("cards", JSON.stringify(doc))
+
+        }
+        function makeCardBlocks() {
+            let elCards = document.querySelector(".cards");
+            let cardsAll = JSON.parse(localStorage.getItem("cards"))
+            cardsAll.forEach(element => {
+                elCards.innerHTML += `<div class= "card">
+            <img onclick="deleteCard(${element.id})" class = "delete" src="./img/free-icon-cancel-1055185.png" alt="">
+            <b><p style="text-align: center" class="title">${element.title}</p></b>
+            <img class = "img" src="${element.image}" alt="">
+            <p class="price">price:${element.price}</p>
+            <p class="description">${element.description}</p>
+            </div>
+      `
+            }
+            )
+        }
+        function deleteCard(id) {
+            let cards = JSON.parse(localStorage.getItem("cards"))
+            let elCards = document.querySelector(".cards");
+            let newCards = cards.filter(element => element.id !== id)
+            localStorage.setItem("cards", JSON.stringify(newCards))
+            elCards.innerHTML = ""
+
+            if (cards.length == 2) {
+                getData()
+            } else {
+                makeCardBlocks()
+            }
+        }
+
+        let block = document.querySelector(".block")
+        function addNewCard() {
+            let block = document.querySelector(".block")
+            block.style.display = "block"
+        }
+        function addCard(item) {
+            let cards = JSON.parse(localStorage.getItem("cards"))
+            let elCards = document.querySelector(".cards");
+            let newTitle = document.querySelector(".newTitle").value
+            let newImage = document.querySelector(".newImage").value
+            let newPrice = document.querySelector(".newPrice").value
+            let newDescription = document.querySelector(".newDescription").value
+            let newCard = {
+                id: +(`${cards.length + 1}`),
+                title: `${newTitle}`,
+                image: `${newImage}`,
+                price: `${newPrice}`,
+                description: `${newDescription}`,
+            }
+            cards.push(newCard)
+            localStorage.setItem("cards", JSON.stringify(cards))
+            elCards.innerHTML = ""
+            makeCardBlocks()
+
+            let block = document.querySelector(".block")
+            block.style.display = "none"
+        }
+        function cancelCard() {
+            let block = document.querySelector(".block")
+            block.style.display = "none"
+        }
+
+
+
+    </script>
+</body>
+
+
+</html>
