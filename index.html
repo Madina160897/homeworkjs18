@@ -70,6 +70,7 @@
             position: absolute;
             top: -30px;
             right: -30px;
+            cursor: pointer;
         }
 
         .icon-img {
@@ -143,6 +144,12 @@
 
     <script>
 
+        if (localStorage.getItem("products") == null || localStorage.getItem("products").length === 2) {
+            getData()
+        } else {
+            makeCardBlocks()
+        }
+
         let card = [];
 
         getCard()
@@ -170,7 +177,7 @@
             products.forEach(element => {
                 elCard.innerHTML += `
                 <div class="cards">
-                    <button class="icon"> <img class="icon-img" src="./2920658.png" alt=""> </button>
+                    <button class="icon" onclick="deleteCard(${element.id})"> <img class="icon-img" src="./2920658.png"> </button>
                     <h1 class="title"> ${element.title}</h1>
                     <img class="img" src="${element.image}" alt="">
                     <div class="pr-rat">
@@ -194,9 +201,46 @@
             div1.style.backgroundColor = "rgb(196, 193, 193, 0.5)";
         }
 
+        function addOne() {
+            let elCard = document.querySelector(".card");
+            let products = JSON.parse(localStorage.getItem("products"));
+            let nameCard = document.querySelector(".name-card").value;
+            let imgCard = document.querySelector(".img-card").value;
+            let priceCard = document.querySelector(".price-card").value;
+            let descCard = document.querySelector(".desc-card").value;
+            let addCard = {
+                id: (`${products.length + 1}`),
+                title: `${nameCard}`,
+                image: `${imgCard}`,
+                price: `${priceCard}`,
+                description: `${descCard}`,
+            };
+
+            products.push(addCard);
+            localStorage.setItem("products", JSON.stringify(card));
+            elCard.innerHTML = "";
+            makeCardBlocks()
+
+            div1.style.display = "none";
+        }
+
         function cancelCard() {
             div1.style.display = 'none';
             body.style.backgroundColor = 'white';
+        }
+
+        function deleteCard(id) {
+            let elCard = document.querySelector(".card");
+            let products = JSON.parse(localStorage.getItem("products"));
+            let deleteCard = products.filter(element => element.id !== id);
+            localStorage.setItem("products", JSON.stringify(deleteCard));
+            elCard.innerHTML = ""
+
+            if (products.length == 2) {
+                getData()
+            } else {
+                makeCardBlocks()
+            }
         }
 
     </script>
